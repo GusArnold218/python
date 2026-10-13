@@ -1,0 +1,1159 @@
+<title>HD Signs Shop</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: black brand bar + tab strip; quote = form column beside a sticky gold-footed ticket; jobs = stage board. */
+:root{
+  --bg:#ffffff; --panel:#ffffff; --panel-2:#f7f6f2; --line:#111111; --soft:#dedbd2;
+  --text:#111111; --dim:#5c5c5c; --accent:#d4af37; --accent-ink:#111111; --bar:#111111; --bar-ink:#ffffff;
+  --red:#b3261e; --red-bg:#fbe9e7; --green:#1f7a4a; --green-bg:#e3f3ea; --amber:#8a5a00; --amber-bg:#fdf1d6;
+  --display:'Anton',Impact,'Arial Narrow',sans-serif; --body:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121211; --panel:#1a1a18; --panel-2:#23221f; --line:#55534c; --soft:#34332e;
+  --text:#f2f0ea; --dim:#a8a59c; --accent:#d4af37; --accent-ink:#111111; --bar:#000000; --bar-ink:#ffffff;
+  --red:#ff8a80; --red-bg:#3a1714; --green:#7fd6a4; --green-bg:#16301f; --amber:#f2c76b; --amber-bg:#352910; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121211; --panel:#1a1a18; --panel-2:#23221f; --line:#55534c; --soft:#34332e;
+  --text:#f2f0ea; --dim:#a8a59c; --accent:#d4af37; --accent-ink:#111111; --bar:#000000; --bar-ink:#ffffff;
+  --red:#ff8a80; --red-bg:#3a1714; --green:#7fd6a4; --green-bg:#16301f; --amber:#f2c76b; --amber-bg:#352910; color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 var(--body);min-height:100vh}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+button,input,select,textarea{font:inherit;color:inherit}
+input[type=number]::-webkit-outer-spin-button,input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+input[type=number]{-moz-appearance:textfield}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.num{font-variant-numeric:tabular-nums}
+
+/* brand bar */
+.bar{background:var(--bar);color:var(--bar-ink);border-bottom:3px solid var(--accent)}
+.bar .wrap{display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding-block:14px}
+.logo{height:34px;width:auto;display:block}
+.bar .tag{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;font-weight:600;opacity:.8}
+.tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+.tab{background:none;border:1px solid transparent;color:var(--bar-ink);padding:8px 14px;border-radius:3px;cursor:pointer;font-weight:600;font-size:13.5px;opacity:.75}
+.tab:hover{opacity:1}
+.tab.on{background:var(--accent);color:var(--accent-ink);opacity:1}
+.tab .ct{display:inline-block;min-width:18px;margin-left:6px;padding:0 5px;border-radius:9px;font-size:11px;background:rgba(255,255,255,.18)}
+.tab.on .ct{background:rgba(0,0,0,.15)}
+
+main{padding-block:24px 60px}
+.view[hidden]{display:none}
+.notice{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--amber);background:var(--amber-bg);color:var(--amber);padding:10px 14px;border-radius:3px;font-size:12.5px;margin-bottom:18px}
+.notice b{font-weight:700}
+.notice.err{border-color:var(--red);background:var(--red-bg);color:var(--red)}
+
+h2.sec{font-size:12.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--dim);margin:22px 0 10px}
+h2.sec:first-child{margin-top:0}
+.pagehead{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:16px}
+.pagehead h1{font:400 30px/1 var(--display);letter-spacing:.4px;margin:0;text-wrap:balance}
+.pagehead .meta{color:var(--dim);font-size:13px}
+.pagehead .grow{flex:1}
+
+/* fields */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:18px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media (max-width:640px){.grid2,.grid4{grid-template-columns:1fr 1fr}}
+@media (max-width:420px){.grid2{grid-template-columns:1fr}}
+.f label,.lbl{display:block;font-size:12px;color:var(--dim);font-weight:500;margin-bottom:5px}
+.f.full{grid-column:1/-1}
+.in{width:100%;background:var(--panel-2);border:1px solid var(--line);border-radius:3px;padding:8px 10px;font-size:14px;min-width:0}
+textarea.in{resize:vertical;min-height:60px}
+select.in{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);background-position:calc(100% - 15px) 55%,calc(100% - 10px) 55%;background-size:5px 5px;background-repeat:no-repeat;padding-right:26px}
+.unitin{display:flex;align-items:center;background:var(--panel-2);border:1px solid var(--line);border-radius:3px}
+.unitin input{background:none;border:0;padding:8px 10px;width:100%;min-width:0;font-weight:600;font-size:15px;outline:none}
+.unitin span{color:var(--dim);font-size:12px;padding-right:9px}
+.unitin:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--panel-2);border:1px solid var(--line);border-radius:3px;padding:8px 14px;font-weight:600;font-size:13.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent)}
+.btn.dark{background:var(--bar);color:var(--accent);border-color:var(--bar)}
+.btn.gold{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn.sm{padding:5px 10px;font-size:12.5px}
+.btn.ghost{background:none;border-color:transparent;color:var(--dim)}
+.btn.ghost:hover{color:var(--red)}
+.btn.danger{color:var(--red);border-color:var(--red);background:none}
+.btn:disabled{opacity:.5;cursor:default}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+
+.chk{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font-size:13px;font-weight:500}
+.chk input{appearance:none;width:18px;height:18px;border:2px solid var(--line);border-radius:3px;margin:0;flex:none;display:grid;place-items:center;cursor:pointer;background:var(--panel)}
+.chk input:checked{background:var(--accent);border-color:var(--accent)}
+.chk input:checked::after{content:"";width:5px;height:9px;border:solid var(--accent-ink);border-width:0 2px 2px 0;transform:translateY(-1px) rotate(45deg)}
+.chk small{color:var(--dim);font-weight:500}
+
+.pill{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.3px;padding:2px 8px;border-radius:10px;background:var(--panel-2);color:var(--dim);border:1px solid var(--soft);white-space:nowrap}
+.pill.ph{background:var(--amber-bg);color:var(--amber);border-color:transparent}
+.pill.red{background:var(--red-bg);color:var(--red);border-color:transparent}
+.pill.green{background:var(--green-bg);color:var(--green);border-color:transparent}
+.pill.gold{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+
+/* quote layout */
+.qlayout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);gap:22px;align-items:start}
+@media (max-width:880px){.qlayout{grid-template-columns:1fr}}
+.items{display:flex;flex-direction:column;gap:12px}
+.item{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:16px}
+.item-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.item-head b{font-size:12.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim)}
+.ifields{display:grid;grid-template-columns:1.6fr 1fr 1fr .7fr;gap:10px}
+.ifields .wide{grid-column:span 2}
+@media (max-width:560px){.ifields{grid-template-columns:1fr 1fr}.ifields .mat{grid-column:1/-1}}
+.ratenote{font-size:11.5px;color:var(--dim);margin-top:5px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.unitsw{display:inline-flex;border:1px solid var(--line);border-radius:3px;overflow:hidden}
+.unitsw button{border:0;background:var(--panel-2);padding:5px 12px;font-size:12px;font-weight:600;cursor:pointer;color:var(--dim)}
+.unitsw button.on{background:var(--accent);color:var(--accent-ink)}
+.opts{display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:12px;padding-top:12px;border-top:1px dashed var(--soft);align-items:center}
+.addons{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.addon{display:grid;grid-template-columns:minmax(0,1fr) 84px 76px 28px;gap:8px;align-items:center;font-size:13px}
+.addon .in{padding:5px 8px;font-size:13px}
+.addon .amt{text-align:right;font-weight:600}
+.isub{margin-top:12px;padding-top:12px;border-top:1px dashed var(--soft);display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:13px;color:var(--dim);flex-wrap:wrap}
+.isub .amt{font-weight:700;color:var(--text);font-size:16px}
+.isub .minflag{color:var(--amber);font-weight:600}
+.addrow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.add{background:var(--panel-2);border:1px dashed var(--line);border-radius:4px;padding:12px;text-align:center;font-weight:600;cursor:pointer;color:var(--dim)}
+.add:hover{border-color:var(--accent);color:var(--text)}
+.services{display:flex;flex-direction:column;gap:14px}
+.svc{border-top:1px dashed var(--soft);padding-top:14px}
+.svc:first-child{border-top:0;padding-top:0}
+.svc .sub{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:10px 0 0 26px}
+@media (max-width:560px){.svc .sub{grid-template-columns:1fr 1fr;margin-left:0}}
+.svc .note{font-size:12px;color:var(--dim);margin:4px 0 0 26px}
+
+/* ticket */
+.ticket{border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--panel);position:sticky;top:calc(env(safe-area-inset-top,0px) + 14px)}
+@media (max-width:880px){.ticket{position:static}}
+.t-top{padding:18px 20px}
+.t-num{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.t-lines{display:flex;flex-direction:column;gap:9px;margin-top:12px}
+.tl{display:flex;justify-content:space-between;gap:12px;font-size:13.5px}
+.tl .d{color:var(--dim);min-width:0;overflow-wrap:anywhere}
+.tl .a{font-weight:600;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tl.neg .a{color:var(--red)}
+.tl.sum{border-top:1px solid var(--soft);padding-top:9px;color:var(--text)}
+.tl.sum .d{color:var(--text);font-weight:600}
+.t-bottom{background:var(--accent);color:var(--accent-ink);padding:18px 20px}
+.t-bottom .k{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;opacity:.75}
+.t-total{font:400 40px/1.1 var(--display);font-variant-numeric:tabular-nums}
+.t-flag{font-size:12px;font-weight:600;margin-top:6px;opacity:.85}
+.t-dep{font-size:13px;font-weight:600;margin-top:10px;padding-top:10px;border-top:1px solid rgba(0,0,0,.2)}
+.t-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.t-actions .btn{width:100%}
+.t-actions .btn.full{grid-column:1/-1}
+.t-bottom .btn{background:#111;color:var(--accent);border-color:#111}
+.t-bottom .btn.alt{background:rgba(255,255,255,.55);color:#111;border-color:rgba(0,0,0,.25)}
+.margin{margin-top:12px;padding:10px 12px;border:1px dashed var(--soft);border-radius:3px;font-size:12.5px;color:var(--dim)}
+.margin b{color:var(--text)}
+.toast{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);transform:translateX(-50%);background:var(--bar);color:var(--bar-ink);border:1px solid var(--accent);padding:10px 18px;border-radius:3px;font-weight:600;z-index:60;max-width:calc(100vw - 32px)}
+.terms{font-size:11.5px;color:var(--dim);margin-top:16px;line-height:1.6}
+
+/* quotes list + tables */
+.tbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.tbar .in{max-width:280px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--soft);vertical-align:middle}
+th{font-size:11.5px;text-transform:uppercase;letter-spacing:.5px;color:var(--dim);font-weight:700;background:var(--panel-2);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.r,th.r{text-align:right}
+td .mono{font-family:var(--mono);font-size:12px}
+.empty{border:1px dashed var(--line);border-radius:4px;padding:28px 20px;text-align:center;color:var(--dim);background:var(--panel)}
+.empty b{display:block;color:var(--text);font-size:15px;margin-bottom:4px}
+
+/* jobs */
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+@media (max-width:640px){.kpis{grid-template-columns:1fr 1fr}}
+.kpi{border:1px solid var(--line);border-radius:4px;padding:10px 14px;background:var(--panel)}
+.kpi .k{font-size:11.5px;color:var(--dim);font-weight:600;text-transform:uppercase;letter-spacing:.4px}
+.kpi .v{font:400 26px/1.15 var(--display);font-variant-numeric:tabular-nums}
+.kpi.warn .v{color:var(--red)}
+.board{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(230px,1fr);gap:10px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--panel-2);border:1px solid var(--soft);border-radius:4px;padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.col-h{display:flex;justify-content:space-between;align-items:center;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.col-h .n{color:var(--dim)}
+.col.over{outline:2px dashed var(--accent);outline-offset:-2px}
+.jc{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:10px;cursor:pointer;display:flex;flex-direction:column;gap:5px}
+.jc:hover{border-color:var(--accent)}
+.jc.overdue{border-left:4px solid var(--red)}
+.jc .t1{display:flex;justify-content:space-between;gap:6px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.jc .cust{font-weight:700;font-size:14px;overflow-wrap:anywhere}
+.jc .what{font-size:12.5px;color:var(--dim);overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.jc .chips{display:flex;gap:5px;flex-wrap:wrap}
+.jc .mv{display:flex;justify-content:space-between;gap:6px;margin-top:2px}
+.jc .mv .btn{padding:3px 8px;font-size:12px}
+.col .none{font-size:12px;color:var(--dim);text-align:center;padding:12px 4px}
+
+/* dialog */
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:50;display:grid;place-items:center;padding:16px;overflow:auto}
+.dlg{background:var(--panel);border:1px solid var(--line);border-radius:4px;width:min(720px,100%);max-height:calc(100vh - 32px);overflow:auto}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:14px 18px;background:var(--bar);color:var(--bar-ink);border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:1}
+.dlg-h h3{margin:0;font:400 22px/1.1 var(--display);letter-spacing:.3px}
+.dlg-h .btn{background:none;color:var(--bar-ink);border-color:rgba(255,255,255,.4)}
+.dlg-b{padding:18px;display:flex;flex-direction:column;gap:14px}
+.stages{display:flex;gap:4px;flex-wrap:wrap}
+.stages button{border:1px solid var(--line);background:var(--panel-2);border-radius:3px;padding:6px 10px;font-size:12.5px;font-weight:600;cursor:pointer}
+.stages button.on{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.hist{font-size:12px;color:var(--dim);display:flex;flex-direction:column;gap:2px;font-family:var(--mono)}
+.summary{white-space:pre-wrap;font-size:13px;background:var(--panel-2);border:1px solid var(--soft);border-radius:3px;padding:10px 12px;overflow-wrap:anywhere}
+.dlg-f{display:flex;gap:8px;justify-content:space-between;flex-wrap:wrap;padding:14px 18px;border-top:1px solid var(--soft)}
+
+/* price list */
+.pl td .in{padding:5px 8px;font-size:13px}
+.pl td.w-num{width:110px}
+.pl td.w-chk{width:70px;text-align:center}
+.pl .chk{justify-content:center}
+.pl-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+@media (max-width:720px){.pl-grid{grid-template-columns:1fr 1fr}}
+.savebar{position:sticky;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);margin-top:18px;display:flex;gap:10px;align-items:center;justify-content:space-between;flex-wrap:wrap;background:var(--bar);color:var(--bar-ink);border:1px solid var(--accent);border-radius:4px;padding:10px 14px}
+.files{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.files div{display:flex;justify-content:space-between;gap:8px;background:var(--panel-2);border:1px solid var(--soft);padding:5px 10px;border-radius:3px;font-size:12.5px;overflow-wrap:anywhere}
+.drop{border:2px dashed var(--line);border-radius:4px;padding:14px;text-align:center;color:var(--dim);cursor:pointer;font-size:13px}
+.drop:hover,.drop.dragover{border-color:var(--accent);color:var(--text)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header class="bar">
+  <div class="wrap">
+    <img class="logo" src="logo.png" alt="HD Signs">
+    <span class="tag">Shop desk</span>
+    <nav class="tabs" id="tabs">
+      <button class="tab on" data-v="quote" id="tab-quote">New quote</button>
+      <button class="tab" data-v="quotes" id="tab-quotes">Quotes<span class="ct" id="ctQuotes">0</span></button>
+      <button class="tab" data-v="jobs" id="tab-jobs">Jobs<span class="ct" id="ctJobs">0</span></button>
+      <button class="tab" data-v="prices" id="tab-prices">Price list</button>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="notice err" id="dbNotice" hidden>Saving is off in this view, so quotes and jobs won't be kept. Open this page signed in to claude.ai to save them.</div>
+
+  <!-- ================= QUOTE ================= -->
+  <section class="view" id="v-quote">
+    <div class="pagehead">
+      <h1 id="qTitle">New quote</h1>
+      <span class="meta num" id="qMeta"></span>
+      <span class="grow"></span>
+      <span class="pill" id="qStatusPill">Draft</span>
+      <button class="btn sm" id="qNew">Start a new quote</button>
+    </div>
+    <div class="notice" id="phNotice" hidden></div>
+
+    <h2 class="sec">Customer</h2>
+    <div class="card grid2">
+      <div class="f"><label for="cName">Name or business</label><input class="in" id="cName" placeholder="Customer name"></div>
+      <div class="f"><label for="cPhone">Phone</label><input class="in" id="cPhone" placeholder="(555) 555-5555" inputmode="tel"></div>
+      <div class="f"><label for="cEmail">Email</label><input class="in" id="cEmail" placeholder="customer@email.com" inputmode="email"></div>
+      <div class="f"><label for="cAddr">Job address</label><input class="in" id="cAddr" placeholder="Install or delivery location"></div>
+    </div>
+
+    <h2 class="sec">Signs &amp; line items</h2>
+    <div class="qlayout">
+      <div>
+        <div class="items" id="items"></div>
+        <div class="addrow">
+          <div class="add" id="addSign" role="button" tabindex="0">+ Add a sign</div>
+          <div class="add" id="addCustom" role="button" tabindex="0">+ Custom line item</div>
+        </div>
+
+        <h2 class="sec">Services</h2>
+        <div class="card services">
+          <div class="svc">
+            <label class="chk"><input type="checkbox" id="oDesign"> Design / artwork <small id="designRateLbl"></small></label>
+            <div class="sub" id="designSub" hidden>
+              <div class="f"><label for="oDesignHrs">Design hours</label><div class="unitin"><input type="number" id="oDesignHrs" min="0" step="0.25" value="1"><span>hr</span></div></div>
+            </div>
+            <div class="note">Leave off when the customer supplies print-ready art.</div>
+          </div>
+          <div class="svc">
+            <label class="chk"><input type="checkbox" id="oInstall"> Installation <small id="installRateLbl"></small></label>
+            <div class="sub" id="installSub" hidden>
+              <div class="f"><label for="oInstHrs">Est. hours</label><div class="unitin"><input type="number" id="oInstHrs" min="0" step="0.5" placeholder="0"><span>hr</span></div></div>
+              <div class="f"><label for="oInstCrew">Installers</label><div class="unitin"><input type="number" id="oInstCrew" min="1" step="1" value="1"><span>ppl</span></div></div>
+              <div class="f"><label for="oInstEquip">Lift / equipment</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" id="oInstEquip" min="0" step="1" placeholder="0"></div></div>
+              <div class="f"><label for="oInstTrip">Trip charge</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" id="oInstTrip" min="0" step="1" placeholder="0"></div></div>
+            </div>
+            <div class="note" id="installNote">Enter hours to include install in the total. With no hours, the quote says install is billed hourly.</div>
+          </div>
+          <div class="svc">
+            <label class="chk"><input type="checkbox" id="oRush"> Rush job <small id="rushLbl"></small></label>
+            <div class="note">Applies to production (signs after any volume discount).</div>
+          </div>
+          <div class="svc">
+            <label class="chk"><input type="checkbox" id="oPermit"> Permit needed <small id="permitLbl"></small></label>
+            <div class="sub" id="permitSub" hidden>
+              <div class="f" style="grid-column:span 2"><label for="oPermitType">Permit type</label><input class="in" id="oPermitType" placeholder="e.g. sign permit, building permit"></div>
+              <div class="f" style="grid-column:span 2"><label for="oPermitCost">City / county fee, if known</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" id="oPermitCost" min="0" step="1" placeholder="TBD"></div></div>
+            </div>
+          </div>
+          <div class="svc">
+            <span class="lbl">Extra discount</span>
+            <div class="row">
+              <div class="unitsw" id="discType"><button data-t="pct" class="on">%</button><button data-t="amt">$</button></div>
+              <div class="unitin" style="width:120px"><input type="number" id="oDisc" min="0" step="1" placeholder="0"></div>
+              <input class="in" id="oDiscWhy" placeholder="Reason (shows on quote)" style="flex:1;min-width:160px">
+            </div>
+          </div>
+        </div>
+
+        <h2 class="sec">Artwork &amp; notes</h2>
+        <div class="card">
+          <div class="drop" id="artDrop" role="button" tabindex="0">Attach artwork file names: logos, layouts, photos (click or drop)</div>
+          <input type="file" id="artIn" multiple hidden>
+          <div class="files" id="artList"></div>
+          <div class="f" style="margin-top:12px"><label for="qNotes">Notes for the customer</label><textarea class="in" id="qNotes" placeholder="Colors, fonts, mounting details, proof notes…"></textarea></div>
+          <div class="f" style="margin-top:12px"><label for="qInternal">Shop notes (not on customer copy)</label><textarea class="in" id="qInternal" placeholder="Material on hand, vendor, who quoted…"></textarea></div>
+        </div>
+      </div>
+
+      <aside class="ticket">
+        <div class="t-top">
+          <div class="lbl" style="margin:0">Quote breakdown</div>
+          <div class="t-num" id="tNum"></div>
+          <div class="t-lines" id="tLines"></div>
+          <div class="margin" id="tMargin"></div>
+        </div>
+        <div class="t-bottom">
+          <div class="k">Estimated total</div>
+          <div class="t-total" id="tTotal">$0.00</div>
+          <div id="tFlags"></div>
+          <div class="t-dep" id="tDep" hidden></div>
+          <div class="t-actions">
+            <button class="btn full" id="qSave">Save quote</button>
+            <button class="btn alt" id="qCopy">Copy quote text</button>
+            <button class="btn alt" id="qDl">Download quote</button>
+            <button class="btn alt full" id="qToJob">Accept &amp; create job</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+    <p class="terms" id="termsOut"></p>
+  </section>
+
+  <!-- ================= QUOTES ================= -->
+  <section class="view" id="v-quotes" hidden>
+    <div class="pagehead"><h1>Saved quotes</h1><span class="meta" id="quotesMeta"></span></div>
+    <div class="tbar">
+      <input class="in" id="qSearch" placeholder="Search customer, quote #, address">
+      <select class="in" id="qFilter" style="width:auto"><option value="">All statuses</option><option>Draft</option><option>Sent</option><option>Accepted</option><option>Declined</option></select>
+    </div>
+    <div id="quotesOut"></div>
+  </section>
+
+  <!-- ================= JOBS ================= -->
+  <section class="view" id="v-jobs" hidden>
+    <div class="pagehead"><h1>Job tracker</h1><span class="grow"></span><button class="btn gold" id="jNew">+ New job</button></div>
+    <div class="kpis" id="kpis"></div>
+    <div class="tbar">
+      <input class="in" id="jSearch" placeholder="Search customer, job #, sign">
+      <div class="unitsw" id="jView"><button data-m="board" class="on">Board</button><button data-m="list">List</button></div>
+      <label class="chk"><input type="checkbox" id="jShowPaid"> Show paid jobs</label>
+      <label class="chk"><input type="checkbox" id="jOnlyLate"> Overdue only</label>
+    </div>
+    <div id="jobsOut"></div>
+  </section>
+
+  <!-- ================= PRICES ================= -->
+  <section class="view" id="v-prices" hidden>
+    <div class="pagehead"><h1>Price list</h1><span class="meta">Every quote is priced from this list. Changes apply to new quotes; saved quotes keep their totals.</span></div>
+    <div class="notice" id="plNotice"></div>
+
+    <h2 class="sec">Materials (priced per sq ft)</h2>
+    <div class="tablewrap pl"><table>
+      <thead><tr><th>Material</th><th>Sell $/sq ft</th><th>Your cost $/sq ft</th><th>Rigid</th><th>Confirmed</th><th></th></tr></thead>
+      <tbody id="plMats"></tbody>
+    </table></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="plAddMat">+ Add material</button></div>
+
+    <h2 class="sec">Finishing &amp; hardware add-ons</h2>
+    <div class="tablewrap pl"><table>
+      <thead><tr><th>Add-on</th><th>Charged per</th><th>Sell $</th><th>Your cost $</th><th>Confirmed</th><th></th></tr></thead>
+      <tbody id="plAdds"></tbody>
+    </table></div>
+    <div class="row" style="margin-top:8px"><button class="btn sm" id="plAddAdd">+ Add add-on</button></div>
+
+    <h2 class="sec">Rates &amp; rules</h2>
+    <div class="card pl-grid" id="plRules"></div>
+
+    <h2 class="sec">Volume discount (total sign quantity on a quote)</h2>
+    <div class="card pl-grid" id="plVol"></div>
+
+    <h2 class="sec">Terms printed on every quote</h2>
+    <textarea class="in" id="plTerms" rows="4"></textarea>
+
+    <div class="savebar"><span id="plState">No unsaved changes</span><div class="row"><button class="btn sm" id="plReset" style="background:none;color:#fff;border-color:rgba(255,255,255,.4)">Discard changes</button><button class="btn gold sm" id="plSave">Save price list</button></div></div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim" hidden><div class="dlg" id="dlg" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" hidden></div>
+
+<script>
+/* ============ defaults (HD Signs confirmed numbers; anything unconfirmed is flagged) ============ */
+const DEFAULT_PRICES = {
+  materials: [
+    {id:'vinyl',name:'Vinyl',rate:15,cost:null,rigid:false,confirmed:true},
+    {id:'banner',name:'Banner (13 oz)',rate:15,cost:null,rigid:false,confirmed:true},
+    {id:'coroplast',name:'Coroplast',rate:19,cost:null,rigid:true,confirmed:true},
+    {id:'acm',name:'ACM / Dibond',rate:24,cost:null,rigid:true,confirmed:true},
+    {id:'foamcore',name:'Foam core',rate:20,cost:null,rigid:true,confirmed:true},
+    {id:'aluminum',name:'Aluminum',rate:30,cost:null,rigid:true,confirmed:true},
+    {id:'pvc',name:'PVC board',rate:22,cost:null,rigid:true,confirmed:false},
+    {id:'acrylic',name:'Acrylic',rate:28,cost:null,rigid:true,confirmed:false},
+    {id:'mesh',name:'Mesh banner',rate:16,cost:null,rigid:false,confirmed:false},
+    {id:'perf',name:'Window perf (one-way vision)',rate:14,cost:null,rigid:false,confirmed:false},
+    {id:'magnet',name:'Vehicle magnet',rate:20,cost:null,rigid:false,confirmed:false},
+    {id:'wrap',name:'Vehicle wrap (cast + laminate)',rate:18,cost:null,rigid:false,confirmed:false},
+    {id:'wall',name:'Wall graphics',rate:16,cost:null,rigid:false,confirmed:false},
+    {id:'floor',name:'Floor graphics (slip-rated)',rate:18,cost:null,rigid:false,confirmed:false}
+  ],
+  addons: [
+    {id:'grommets',name:'Grommets',per:'each',rate:0.5,cost:null,confirmed:false,auto:'grommets'},
+    {id:'pockets',name:'Pole pockets / hemming',per:'linft',rate:2,cost:null,confirmed:false,auto:'width2'},
+    {id:'stakes',name:'H-stakes (yard signs)',per:'each',rate:2,cost:null,confirmed:false,auto:'perSign'},
+    {id:'standoffs',name:'Standoffs / mounting hardware',per:'each',rate:8,cost:null,confirmed:false,auto:'four'},
+    {id:'contour',name:'Contour / shape cut',per:'sign',rate:10,cost:null,confirmed:false,auto:'perSign'},
+    {id:'corners',name:'Rounded corners',per:'sign',rate:2,cost:null,confirmed:false,auto:'perSign'},
+    {id:'aframe',name:'A-frame sidewalk stand',per:'each',rate:150,cost:null,confirmed:false,auto:'one'}
+  ],
+  rules: {
+    minimum:{v:50,ok:true}, laminatePct:{v:15,ok:true}, doubleSidedPct:{v:35,ok:true}, overlayRate:{v:12,ok:true},
+    rushPct:{v:25,ok:true}, permitFee:{v:75,ok:true}, installRate:{v:150,ok:true}, designRate:{v:65,ok:false},
+    depositPct:{v:50,ok:false}, depositOver:{v:500,ok:true}, taxPct:{v:0,ok:false}, validDays:{v:30,ok:true}
+  },
+  volume: [{min:10,pct:5},{min:25,pct:10},{min:50,pct:15}],
+  terms: 'Quote valid for {days} days from the date above. Permits are not included unless listed, and the permit line is a handling fee only; the city or county permit cost is confirmed separately. Jobs over ${over} require a {dep}% deposit before production begins; balance due on completion or installation. Rush and installation amounts are estimates; final pricing is confirmed by HD Signs before work begins. Customer approves the final proof before production.',
+  shopEmail: 'hdsigns@msn.com'
+};
+const RULE_META = {
+  minimum:['Minimum per sign line','$'], laminatePct:['Laminate upcharge','%'], doubleSidedPct:['Double-sided upcharge','%'],
+  overlayRate:['Vinyl applied to rigid, per sq ft','$'], rushPct:['Rush surcharge','%'], permitFee:['Permit handling fee','$'],
+  installRate:['Install rate per installer-hour','$'], designRate:['Design rate per hour','$'], depositPct:['Deposit','%'],
+  depositOver:['Deposit required on jobs over','$'], taxPct:['Sales tax','%'], validDays:['Quote valid for (days)','#']
+};
+const STAGES = ['Approved','Design & proof','Production','Install / pickup','Complete – invoice','Paid'];
+const SURFACES = ['Building','Vehicle','Window','Wall / interior','Yard / ground','Fence','Event / portable','Other'];
+
+/* ============ state ============ */
+const $ = id => document.getElementById(id);
+const clone = o => JSON.parse(JSON.stringify(o));
+const money = n => '$' + (Number(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const todayISO = () => { const d=new Date(); return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10); };
+const fmtDate = iso => iso ? new Date(iso+(iso.length===10?'T12:00':'')).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '';
+const uid = () => Math.random().toString(36).slice(2,8);
+
+let P = clone(DEFAULT_PRICES);          // live price list
+let plDraft = clone(P), plDirty = false;
+let db = null, quotesCol = null, jobsCol = null, priceDoc = null, priceVersionLoaded = false;
+let quotes = [], jobs = [];
+let Q = null;                            // quote being edited
+let nextItem = 1;
+let jobView = 'board';
+try { jobView = localStorage.getItem('hd.jobView') || 'board'; } catch(e) {}
+
+function newQuoteNumber(){
+  const d = todayISO().replace(/-/g,'');
+  return `HD-${d}-${Math.floor(1000+Math.random()*9000)}`;
+}
+function blankQuote(){
+  return { id:null, number:newQuoteNumber(), date:todayISO(), status:'Draft', jobId:null,
+    customer:{name:'',phone:'',email:'',address:''},
+    items:[newSign()],
+    opts:{ design:false, designHrs:1, install:false, instHrs:'', instCrew:1, instEquip:'', instTrip:'', rush:false, permit:false, permitType:'', permitCost:'', discType:'pct', disc:'', discWhy:'' },
+    art:[], notes:'', internal:'' };
+}
+function newSign(){ return { k:nextItem++, kind:'sign', material:'vinyl', w:'', h:'', unit:'ft', qty:1, surface:'Building', lam:false, ds:false, overlay:false, addons:[], label:'' }; }
+function newCustom(){ return { k:nextItem++, kind:'custom', label:'', qty:1, price:'' }; }
+
+const mat = id => P.materials.find(m=>m.id===id) || P.materials[0];
+const addon = id => P.addons.find(a=>a.id===id);
+const R = k => Number(P.rules[k]?.v) || 0;
+
+/* ============ pricing engine ============ */
+function calcItem(it){
+  if (it.kind === 'custom'){
+    const qty = Math.max(1, parseInt(it.qty)||1), each = parseFloat(it.price)||0;
+    return { qty, charged: qty*each, cost:null, sqft:0, signs:0, hitMin:false, base:0, addTotal:0 };
+  }
+  const m = mat(it.material);
+  const qty = Math.max(1, parseInt(it.qty)||1);
+  const w = parseFloat(it.w)||0, h = parseFloat(it.h)||0;
+  const wf = it.unit==='in' ? w/12 : w, hf = it.unit==='in' ? h/12 : h;
+  const each = wf*hf, sqft = each*qty;
+  let base = sqft*m.rate;
+  let cost = m.cost!=null && m.cost!=='' ? sqft*Number(m.cost) : null;
+  const overlay = it.overlay && m.rigid ? sqft*R('overlayRate') : 0;
+  base += overlay;
+  if (it.lam) base *= 1 + R('laminatePct')/100;
+  if (it.ds)  base *= 1 + R('doubleSidedPct')/100;
+  let addTotal = 0, addCost = 0, addCostKnown = true;
+  const addLines = (it.addons||[]).map(a => {
+    const def = addon(a.id); if (!def) return null;
+    const n = parseFloat(a.n)||0, amt = n*def.rate;
+    addTotal += amt;
+    if (def.cost!=null && def.cost!=='') addCost += n*Number(def.cost); else if (n) addCostKnown = false;
+    return { def, n, amt };
+  }).filter(Boolean);
+  const raw = base + addTotal;
+  const charged = raw > 0 ? Math.max(raw, R('minimum')) : 0;
+  if (cost!=null && addCostKnown) cost += addCost; else if (addTotal) cost = null;
+  return { qty, sqft, each, base, overlay, addTotal, addLines, raw, charged, hitMin: raw>0 && raw<R('minimum'), cost, signs:qty, m };
+}
+function autoQty(rule, it){
+  const qty = Math.max(1, parseInt(it.qty)||1);
+  const w = parseFloat(it.w)||0, h = parseFloat(it.h)||0;
+  const wf = it.unit==='in'?w/12:w, hf = it.unit==='in'?h/12:h;
+  switch(rule){
+    case 'grommets': return Math.max(4, Math.ceil(2*(wf+hf)/2)) * qty;   // one every ~2 ft of edge, 4 minimum
+    case 'width2':   return Math.round(2*wf*qty*100)/100;                   // top + bottom pockets
+    case 'perSign':  return qty;
+    case 'four':     return 4*qty;
+    default:         return 1;
+  }
+}
+function volTier(n){ return [...P.volume].filter(t=>t.min>0).sort((a,b)=>b.min-a.min).find(t=>n>=t.min) || {min:0,pct:0}; }
+
+function calcQuote(q){
+  const lines = q.items.map(it => ({ it, c: calcItem(it) }));
+  const itemsSub = lines.reduce((s,l)=>s+l.c.charged,0);
+  const signQty = lines.filter(l=>l.it.kind==='sign').reduce((s,l)=>s+l.c.qty,0);
+  const tier = volTier(signQty);
+  const signSub = lines.filter(l=>l.it.kind==='sign').reduce((s,l)=>s+l.c.charged,0);
+  const vol = signSub * tier.pct/100;
+  const production = itemsSub - vol;
+  const o = q.opts;
+  const rush = o.rush ? (signSub - vol) * R('rushPct')/100 : 0;
+  const design = o.design ? (parseFloat(o.designHrs)||0) * R('designRate') : 0;
+  const instHrs = parseFloat(o.instHrs)||0, crew = Math.max(1, parseInt(o.instCrew)||1);
+  const installLabor = o.install ? instHrs*crew*R('installRate') : 0;
+  const installExtra = o.install ? (parseFloat(o.instEquip)||0) + (parseFloat(o.instTrip)||0) : 0;
+  const install = installLabor + installExtra;
+  const installTBD = o.install && instHrs<=0;
+  const permitFee = o.permit ? R('permitFee') : 0;
+  const permitCost = o.permit ? (parseFloat(o.permitCost)||0) : 0;
+  const pre = production + rush + design + install + permitFee + permitCost;
+  const dv = parseFloat(o.disc)||0;
+  const disc = dv<=0 ? 0 : (o.discType==='pct' ? pre*Math.min(dv,100)/100 : Math.min(dv,pre));
+  const taxable = pre - disc;
+  const tax = taxable * R('taxPct')/100;
+  const total = taxable + tax;
+  const deposit = total > R('depositOver') ? total*R('depositPct')/100 : 0;
+  // internal margin: only when every sign line has a material cost
+  const costs = lines.filter(l=>l.it.kind==='sign' && l.c.charged>0).map(l=>l.c.cost);
+  const costKnown = costs.length>0 && costs.every(c=>c!=null);
+  const matCost = costKnown ? costs.reduce((s,c)=>s+c,0) : null;
+  return { lines, itemsSub, signQty, tier, vol, production, rush, design, install, installLabor, installExtra, installTBD, instHrs, crew, permitFee, permitCost, pre, disc, tax, total, deposit, matCost };
+}
+
+/* ============ quote editor rendering ============ */
+function itemTitle(it, i){ return it.kind==='custom' ? `Line ${i+1} · custom` : `Sign ${i+1}`; }
+function matOptions(sel){
+  return P.materials.map(m=>`<option value="${esc(m.id)}" ${m.id===sel?'selected':''}>${esc(m.name)}</option>`).join('');
+}
+function renderItems(){
+  const box = $('items'); box.innerHTML = '';
+  Q.items.forEach((it, i) => {
+    const el = document.createElement('div'); el.className='item'; el.dataset.k = it.k;
+    if (it.kind === 'custom'){
+      el.innerHTML = `
+        <div class="item-head"><b>${itemTitle(it,i)}</b>${Q.items.length>1?`<button class="btn ghost sm" data-act="rm">Remove</button>`:''}</div>
+        <div class="ifields">
+          <div class="f wide"><label for="lbl${it.k}">Description</label><input class="in" id="lbl${it.k}" data-f="label" value="${esc(it.label)}" placeholder="e.g. Post & panel install, sign removal, dimensional letters"></div>
+          <div class="f"><label for="pr${it.k}">Price each</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" id="pr${it.k}" min="0" step="0.01" data-f="price" value="${esc(it.price)}" placeholder="0"></div></div>
+          <div class="f"><label for="q${it.k}">Qty</label><div class="unitin"><input type="number" id="q${it.k}" min="1" step="1" data-f="qty" value="${esc(it.qty)}"></div></div>
+        </div>
+        <div class="isub"><span class="sd"></span><span class="amt num"></span></div>`;
+    } else {
+      const m = mat(it.material);
+      const usable = P.addons.filter(a => !(it.addons||[]).some(x=>x.id===a.id));
+      el.innerHTML = `
+        <div class="item-head"><b>${itemTitle(it,i)}</b>
+          <div class="row"><div class="unitsw" data-act="unit"><button data-u="ft" class="${it.unit==='ft'?'on':''}">Feet</button><button data-u="in" class="${it.unit==='in'?'on':''}">Inches</button></div>
+          ${Q.items.length>1?`<button class="btn ghost sm" data-act="rm">Remove</button>`:''}</div></div>
+        <div class="ifields">
+          <div class="f mat"><label for="m${it.k}">Material</label><select class="in" id="m${it.k}" data-f="material">${matOptions(it.material)}</select>
+            <div class="ratenote"><span class="num">${money(m.rate)} / sq ft</span>${m.confirmed?'':'<span class="pill ph">placeholder price</span>'}</div></div>
+          <div class="f"><label for="w${it.k}">Width</label><div class="unitin"><input type="number" id="w${it.k}" min="0" step="${it.unit==='in'?'0.25':'0.1'}" data-f="w" value="${esc(it.w)}" placeholder="0"><span>${it.unit}</span></div></div>
+          <div class="f"><label for="h${it.k}">Height</label><div class="unitin"><input type="number" id="h${it.k}" min="0" step="${it.unit==='in'?'0.25':'0.1'}" data-f="h" value="${esc(it.h)}" placeholder="0"><span>${it.unit}</span></div></div>
+          <div class="f"><label for="q${it.k}">Qty</label><div class="unitin"><input type="number" id="q${it.k}" min="1" step="1" data-f="qty" value="${esc(it.qty)}"></div></div>
+          <div class="f wide"><label for="lbl${it.k}">Sign name (optional)</label><input class="in" id="lbl${it.k}" data-f="label" value="${esc(it.label)}" placeholder="e.g. Storefront banner, truck doors"></div>
+          <div class="f wide"><label for="s${it.k}">Goes on</label><select class="in" id="s${it.k}" data-f="surface">${SURFACES.map(s=>`<option ${s===it.surface?'selected':''}>${s}</option>`).join('')}</select></div>
+        </div>
+        <div class="opts">
+          <label class="chk"><input type="checkbox" data-f="lam" ${it.lam?'checked':''}> Laminate <small>+${R('laminatePct')}%</small></label>
+          <label class="chk"><input type="checkbox" data-f="ds" ${it.ds?'checked':''}> Double-sided <small>+${R('doubleSidedPct')}%</small></label>
+          ${m.rigid?`<label class="chk"><input type="checkbox" data-f="overlay" ${it.overlay?'checked':''}> Vinyl graphics applied <small>+${money(R('overlayRate'))}/sq ft</small></label>`:''}
+          ${usable.length?`<select class="in" data-act="addon" style="width:auto;padding:5px 26px 5px 8px;font-size:12.5px"><option value="">+ Finishing / hardware</option>${usable.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}</option>`).join('')}</select>`:''}
+        </div>
+        <div class="addons"></div>
+        <div class="isub"><span class="sd"></span><span class="amt num"></span></div>`;
+    }
+    box.appendChild(el);
+  });
+  renderAddonRows();
+  update();
+}
+function renderAddonRows(){
+  Q.items.forEach(it => {
+    if (it.kind!=='sign') return;
+    const host = document.querySelector(`.item[data-k="${it.k}"] .addons`); if (!host) return;
+    host.innerHTML = (it.addons||[]).map((a,ix) => {
+      const d = addon(a.id); if (!d) return '';
+      const unit = d.per==='linft'?'lin ft':d.per==='sign'?'signs':'qty';
+      return `<div class="addon" data-ix="${ix}"><span>${esc(d.name)} <small style="color:var(--dim)">${money(d.rate)}/${d.per==='linft'?'ft':d.per==='sign'?'sign':'ea'}</small>${d.confirmed?'':' <span class="pill ph">placeholder</span>'}</span>
+        <div class="unitin"><input type="number" min="0" step="1" value="${esc(a.n)}" data-af="${ix}" aria-label="${esc(d.name)} ${unit}"><span>${unit}</span></div>
+        <span class="amt num" data-aamt="${ix}"></span>
+        <button class="btn ghost sm" data-arm="${ix}" aria-label="Remove ${esc(d.name)}">✕</button></div>`;
+    }).join('');
+  });
+}
+
+$('items').addEventListener('input', e => {
+  const card = e.target.closest('.item'); if (!card) return;
+  const it = Q.items.find(x=>x.k==card.dataset.k);
+  if (e.target.dataset.af !== undefined){ it.addons[+e.target.dataset.af].n = e.target.value; it.addons[+e.target.dataset.af].manual = true; update(); return; }
+  const f = e.target.dataset.f; if (!f) return;
+  if (e.target.type === 'checkbox') it[f] = e.target.checked; else it[f] = e.target.value;
+  if (f==='w'||f==='h'||f==='qty') refreshAutoAddons(it);
+  if (f==='material'){ const m = mat(it.material); if (!m.rigid) it.overlay = false; renderItems(); return; }
+  update();
+});
+$('items').addEventListener('change', e => {
+  if (e.target.dataset.act==='addon' && e.target.value){
+    const card = e.target.closest('.item'); const it = Q.items.find(x=>x.k==card.dataset.k);
+    const d = addon(e.target.value);
+    it.addons.push({ id:d.id, n: autoQty(d.auto, it), manual:false });
+    renderItems();
+  }
+});
+$('items').addEventListener('click', e => {
+  const card = e.target.closest('.item'); if (!card) return;
+  const it = Q.items.find(x=>x.k==card.dataset.k);
+  if (e.target.dataset.act==='rm'){ Q.items = Q.items.filter(x=>x!==it); renderItems(); return; }
+  if (e.target.dataset.u){ it.unit = e.target.dataset.u; refreshAutoAddons(it); renderItems(); return; }
+  if (e.target.dataset.arm !== undefined){ it.addons.splice(+e.target.dataset.arm,1); renderItems(); }
+});
+function refreshAutoAddons(it){
+  if (it.kind!=='sign') return;
+  (it.addons||[]).forEach((a,ix) => {
+    if (a.manual) return;
+    const d = addon(a.id); if (!d) return;
+    a.n = autoQty(d.auto, it);
+    const inp = document.querySelector(`.item[data-k="${it.k}"] [data-af="${ix}"]`); if (inp) inp.value = a.n;
+  });
+}
+const onKeyClick = (el, fn) => { el.addEventListener('click', fn); el.addEventListener('keydown', e => { if (e.key==='Enter'||e.key===' '){ e.preventDefault(); fn(); } }); };
+onKeyClick($('addSign'), () => { Q.items.push(newSign()); renderItems(); });
+onKeyClick($('addCustom'), () => { Q.items.push(newCustom()); renderItems(); });
+
+/* services + customer bindings */
+const OPT_IDS = { oDesign:'design', oDesignHrs:'designHrs', oInstall:'install', oInstHrs:'instHrs', oInstCrew:'instCrew', oInstEquip:'instEquip', oInstTrip:'instTrip', oRush:'rush', oPermit:'permit', oPermitType:'permitType', oPermitCost:'permitCost', oDisc:'disc', oDiscWhy:'discWhy' };
+Object.entries(OPT_IDS).forEach(([id,key]) => $(id).addEventListener('input', e => { Q.opts[key] = e.target.type==='checkbox' ? e.target.checked : e.target.value; syncSubs(); update(); }));
+$('discType').addEventListener('click', e => { const t=e.target.dataset.t; if(!t) return; Q.opts.discType=t; [...$('discType').children].forEach(b=>b.classList.toggle('on', b.dataset.t===t)); update(); });
+const CUST = { cName:'name', cPhone:'phone', cEmail:'email', cAddr:'address' };
+Object.entries(CUST).forEach(([id,key]) => $(id).addEventListener('input', e => { Q.customer[key] = e.target.value; update(); }));
+$('qNotes').addEventListener('input', e => Q.notes = e.target.value);
+$('qInternal').addEventListener('input', e => Q.internal = e.target.value);
+function syncSubs(){
+  $('designSub').hidden = !Q.opts.design; $('installSub').hidden = !Q.opts.install; $('permitSub').hidden = !Q.opts.permit;
+}
+
+/* artwork names */
+function renderArt(){
+  $('artList').innerHTML = Q.art.map((n,i)=>`<div><span>${esc(n)}</span><button class="btn ghost sm" data-ai="${i}">Remove</button></div>`).join('');
+}
+onKeyClick($('artDrop'), () => $('artIn').click());
+$('artIn').addEventListener('change', e => { [...e.target.files].forEach(f=>Q.art.push(f.name)); e.target.value=''; renderArt(); });
+['dragover','dragenter'].forEach(ev => $('artDrop').addEventListener(ev, e => { e.preventDefault(); $('artDrop').classList.add('dragover'); }));
+['dragleave','drop'].forEach(ev => $('artDrop').addEventListener(ev, () => $('artDrop').classList.remove('dragover')));
+$('artDrop').addEventListener('drop', e => { e.preventDefault(); [...e.dataTransfer.files].forEach(f=>Q.art.push(f.name)); renderArt(); });
+$('artList').addEventListener('click', e => { if (e.target.dataset.ai!==undefined){ Q.art.splice(+e.target.dataset.ai,1); renderArt(); } });
+
+function describeItem(it, c){
+  if (it.kind==='custom') return `${it.label || 'Custom item'}${c.qty>1?` × ${c.qty}`:''}`;
+  const dims = (parseFloat(it.w) && parseFloat(it.h)) ? `${it.w}${it.unit==='in'?'"':"'"} × ${it.h}${it.unit==='in'?'"':"'"}` : 'size not set';
+  const extras = [it.lam&&'laminated', it.ds&&'double-sided', it.overlay&&c.m.rigid&&'vinyl graphics'].filter(Boolean);
+  const adds = (c.addLines||[]).filter(a=>a.n>0).map(a=>`${a.def.name.toLowerCase()} (${a.n})`);
+  return `${it.label?it.label+' — ':''}${c.m.name}, ${dims}${c.qty>1?` × ${c.qty}`:''}${extras.length?', '+extras.join(', '):''}${adds.length?'; '+adds.join(', '):''} · ${it.surface}`;
+}
+
+function update(){
+  const t = calcQuote(Q);
+  // per-item subtotals
+  t.lines.forEach(({it,c}) => {
+    const card = document.querySelector(`.item[data-k="${it.k}"]`); if (!card) return;
+    const sd = card.querySelector('.sd'), amt = card.querySelector('.isub .amt');
+    if (it.kind==='custom'){ sd.textContent = c.qty>1 ? `${c.qty} × ${money(parseFloat(it.price)||0)}` : 'Flat price'; }
+    else {
+      const parts = [c.sqft>0 ? `${c.sqft.toFixed(1)} sq ft${c.qty>1?` (${c.each.toFixed(1)} each)`:''}` : 'Enter width and height'];
+      if (c.qty>1 && c.charged) parts.push(`${money(c.charged/c.qty)} each`);
+      sd.innerHTML = esc(parts.join(' · ')) + (c.hitMin ? ` <span class="minflag">· ${money(R('minimum'))} minimum applied</span>` : '');
+      (c.addLines||[]).forEach((a,ix) => { const el = card.querySelector(`[data-aamt="${ix}"]`); if (el) el.textContent = money(a.amt); });
+    }
+    amt.textContent = money(c.charged);
+  });
+  // ticket
+  const L = [];
+  t.lines.forEach(({it,c},i) => L.push(`<div class="tl"><span class="d">${esc((it.kind==='custom'?'':`Sign ${i+1}: `) + describeItem(it,c))}${c.hitMin?' · min':''}</span><span class="a">${money(c.charged)}</span></div>`));
+  if (t.vol>0) L.push(`<div class="tl neg"><span class="d">Volume discount ${t.tier.pct}% (${t.signQty} signs)</span><span class="a">−${money(t.vol)}</span></div>`);
+  if (t.rush>0) L.push(`<div class="tl"><span class="d">Rush +${R('rushPct')}%</span><span class="a">${money(t.rush)}</span></div>`);
+  if (Q.opts.design) L.push(`<div class="tl"><span class="d">Design / artwork, ${parseFloat(Q.opts.designHrs)||0} hr</span><span class="a">${money(t.design)}</span></div>`);
+  if (Q.opts.install){
+    if (t.installTBD) L.push(`<div class="tl"><span class="d">Installation, ${money(R('installRate'))}/hr</span><span class="a">TBD</span></div>`);
+    else L.push(`<div class="tl"><span class="d">Installation, ${t.instHrs} hr × ${t.crew} installer${t.crew>1?'s':''}</span><span class="a">${money(t.installLabor)}</span></div>`);
+    if (t.installExtra>0) L.push(`<div class="tl"><span class="d">Lift / equipment &amp; trip</span><span class="a">${money(t.installExtra)}</span></div>`);
+  }
+  if (Q.opts.permit){
+    L.push(`<div class="tl"><span class="d">Permit handling${Q.opts.permitType?` (${esc(Q.opts.permitType)})`:''}</span><span class="a">${money(t.permitFee)}</span></div>`);
+    L.push(`<div class="tl"><span class="d">City / county permit fee</span><span class="a">${t.permitCost>0?money(t.permitCost):'TBD'}</span></div>`);
+  }
+  if (t.disc>0) L.push(`<div class="tl neg"><span class="d">Discount${Q.opts.discType==='pct'?` ${parseFloat(Q.opts.disc)}%`:''}${Q.opts.discWhy?` — ${esc(Q.opts.discWhy)}`:''}</span><span class="a">−${money(t.disc)}</span></div>`);
+  if (R('taxPct')>0){
+    L.push(`<div class="tl sum"><span class="d">Subtotal</span><span class="a">${money(t.pre - t.disc)}</span></div>`);
+    L.push(`<div class="tl"><span class="d">Sales tax ${R('taxPct')}%</span><span class="a">${money(t.tax)}</span></div>`);
+  }
+  $('tLines').innerHTML = L.join('');
+  $('tTotal').textContent = money(t.total);
+  const flags = [];
+  if (t.installTBD) flags.push(`+ installation billed at ${money(R('installRate'))}/hr per installer, hours to be confirmed`);
+  if (Q.opts.permit && !(t.permitCost>0)) flags.push('+ city/county permit cost, to be confirmed');
+  $('tFlags').innerHTML = flags.map(f=>`<div class="t-flag">${esc(f)}</div>`).join('');
+  $('tDep').hidden = !(t.deposit>0);
+  $('tDep').innerHTML = `Deposit to start production (${R('depositPct')}%): <strong class="num">${money(t.deposit)}</strong> · balance ${money(t.total-t.deposit)}`;
+  // margin (shop only)
+  if (t.matCost!=null){
+    const prod = t.production + t.rush;
+    const gp = prod - t.matCost;
+    $('tMargin').innerHTML = `Shop only · material cost <b class="num">${money(t.matCost)}</b> · production gross profit <b class="num">${money(gp)}</b>${prod>0?` (<b>${Math.round(gp/prod*100)}%</b>)`:''}`;
+  } else {
+    $('tMargin').innerHTML = `Shop only · add your material costs in the Price list to see profit on each quote.`;
+  }
+  $('tNum').textContent = `Quote #${Q.number} · ${fmtDate(Q.date)}`;
+  $('qMeta').textContent = `#${Q.number}`;
+  $('qTitle').textContent = Q.id ? (Q.customer.name ? `Quote for ${Q.customer.name}` : 'Saved quote') : 'New quote';
+  $('qStatusPill').textContent = Q.status;
+  $('qStatusPill').className = 'pill ' + ({Accepted:'green',Declined:'red',Sent:'gold'}[Q.status]||'');
+  $('qToJob').textContent = Q.jobId ? 'Open job' : 'Accept & create job';
+  // placeholders used on this quote
+  const ph = new Set();
+  t.lines.forEach(({it,c}) => { if (it.kind==='sign'){ if (!c.m.confirmed) ph.add(c.m.name); (c.addLines||[]).forEach(a=>{ if(!a.def.confirmed && a.n>0) ph.add(a.def.name); }); }});
+  if (Q.opts.design && !P.rules.designRate.ok) ph.add('design rate');
+  if (t.deposit>0 && !P.rules.depositPct.ok) ph.add('deposit %');
+  $('phNotice').hidden = ph.size===0;
+  $('phNotice').innerHTML = `<span><b>Placeholder prices on this quote:</b> ${esc([...ph].join(', '))}. Set your real numbers in the Price list before sending.</span>`;
+  return t;
+}
+
+function termsText(){
+  return P.terms.replace('{days}', R('validDays')).replace('{over}', R('depositOver')).replace('{dep}', R('depositPct'));
+}
+function labelsFromPrices(){
+  $('designRateLbl').textContent = `${money(R('designRate'))}/hr`;
+  $('installRateLbl').textContent = `${money(R('installRate'))}/hr per installer`;
+  $('rushLbl').textContent = `+${R('rushPct')}%`;
+  $('permitLbl').textContent = `+${money(R('permitFee'))} handling`;
+  $('termsOut').textContent = termsText();
+}
+
+function loadQuoteIntoForm(q){
+  Q = clone(q);
+  Q.items.forEach(it => { it.k = nextItem++; if (it.kind==='sign' && !it.addons) it.addons = []; });
+  Object.entries(CUST).forEach(([id,key]) => $(id).value = Q.customer[key]||'');
+  Object.entries(OPT_IDS).forEach(([id,key]) => { const el=$(id); if (el.type==='checkbox') el.checked = !!Q.opts[key]; else el.value = Q.opts[key] ?? ''; });
+  [...$('discType').children].forEach(b=>b.classList.toggle('on', b.dataset.t===(Q.opts.discType||'pct')));
+  $('qNotes').value = Q.notes||''; $('qInternal').value = Q.internal||'';
+  syncSubs(); renderArt(); renderItems();
+}
+$('qNew').addEventListener('click', () => { loadQuoteIntoForm(blankQuote()); window.scrollTo({top:0}); toast('New quote started'); });
+
+/* ============ quote text / download ============ */
+function quoteText(q, t){
+  const out = [];
+  out.push(`HD Signs — Quote #${q.number}`, `Date: ${fmtDate(q.date)}`, '');
+  const c = q.customer;
+  if (c.name||c.phone||c.email||c.address) out.push(`Customer: ${c.name||'-'}`, `Phone: ${c.phone||'-'}`, `Email: ${c.email||'-'}`, `Job address: ${c.address||'-'}`, '');
+  t.lines.forEach(({it,c},i) => out.push(`${it.kind==='custom'?'•':`Sign ${i+1}:`} ${describeItem(it,c)} — ${money(c.charged)}${c.hitMin?' (minimum)':''}`));
+  out.push('');
+  if (t.vol>0) out.push(`Volume discount ${t.tier.pct}% (${t.signQty} signs): −${money(t.vol)}`);
+  if (t.rush>0) out.push(`Rush: ${money(t.rush)}`);
+  if (q.opts.design) out.push(`Design / artwork: ${money(t.design)}`);
+  if (q.opts.install) out.push(t.installTBD ? `Installation: billed at ${money(R('installRate'))}/hr per installer, hours to be confirmed` : `Installation (estimate): ${money(t.install)}`);
+  if (q.opts.permit) out.push(`Permit handling: ${money(t.permitFee)}${q.opts.permitType?` (${q.opts.permitType})`:''}; city/county permit fee: ${t.permitCost>0?money(t.permitCost):'to be confirmed'}`);
+  if (t.disc>0) out.push(`Discount${q.opts.discWhy?` (${q.opts.discWhy})`:''}: −${money(t.disc)}`);
+  if (t.tax>0) out.push(`Sales tax ${R('taxPct')}%: ${money(t.tax)}`);
+  out.push(`ESTIMATED TOTAL: ${money(t.total)}`);
+  if (t.deposit>0) out.push(`Deposit to start production (${R('depositPct')}%): ${money(t.deposit)}`);
+  if (q.art.length) out.push('', `Artwork on file: ${q.art.join(', ')}`);
+  if (q.notes) out.push('', `Notes: ${q.notes}`);
+  out.push('', termsText(), '', `HD Signs · ${P.shopEmail}`);
+  return out.join('\n');
+}
+$('qCopy').addEventListener('click', () => {
+  const txt = quoteText(Q, calcQuote(Q));
+  const p = navigator.clipboard?.writeText(txt);
+  if (p) p.then(() => toast('Quote copied. Paste it into an email or text.'), () => showTextDialog(txt));
+  else showTextDialog(txt);
+});
+function showTextDialog(txt){
+  openDlg(`<div class="dlg-h"><h3>Quote text</h3><button class="btn sm" data-close>Close</button></div>
+    <div class="dlg-b"><p style="margin:0;color:var(--dim)">Select all and copy:</p><textarea class="in" id="txtOut" rows="16" readonly>${esc(txt)}</textarea></div>`);
+  $('txtOut').focus(); $('txtOut').select();
+}
+let logoData = '';
+fetch('logo.png').then(r=>r.blob()).then(b => new Promise(res => { const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.readAsDataURL(b); })).then(d => logoData = d).catch(()=>{});
+function customerHTML(q, t){
+  const rows = t.lines.map(({it,c},i)=>`<tr><td>${esc((it.kind==='custom'?'':`Sign ${i+1}: `)+describeItem(it,c))}</td><td class="r">${money(c.charged)}</td></tr>`);
+  const extra = [];
+  if (t.vol>0) extra.push([`Volume discount ${t.tier.pct}% (${t.signQty} signs)`, '−'+money(t.vol)]);
+  if (t.rush>0) extra.push([`Rush`, money(t.rush)]);
+  if (q.opts.design) extra.push([`Design / artwork`, money(t.design)]);
+  if (q.opts.install) extra.push([t.installTBD?`Installation at ${money(R('installRate'))}/hr per installer`:'Installation (estimate)', t.installTBD?'TBD':money(t.install)]);
+  if (q.opts.permit){ extra.push([`Permit handling${q.opts.permitType?` (${q.opts.permitType})`:''}`, money(t.permitFee)]); extra.push(['City / county permit fee', t.permitCost>0?money(t.permitCost):'TBD']); }
+  if (t.disc>0) extra.push([`Discount${q.opts.discWhy?` — ${q.opts.discWhy}`:''}`, '−'+money(t.disc)]);
+  if (t.tax>0) extra.push([`Sales tax ${R('taxPct')}%`, money(t.tax)]);
+  const c = q.customer;
+  return `<!doctype html><html><head><meta charset="utf-8"><title>HD Signs Quote ${esc(q.number)}</title>
+<style>body{font:14px/1.5 Arial,Helvetica,sans-serif;color:#111;max-width:760px;margin:24px auto;padding:0 20px}
+.hd{background:#111;padding:16px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:4px solid #d4af37;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hd img{height:36px}.hd div{color:#fff;text-align:right;font-size:12px}h1{font-size:22px;margin:20px 0 4px}
+table{width:100%;border-collapse:collapse;margin-top:14px}td{padding:8px 6px;border-bottom:1px solid #ddd;vertical-align:top}.r{text-align:right;white-space:nowrap}
+.tot td{font-size:18px;font-weight:bold;border-top:2px solid #111;border-bottom:0;background:#d4af37;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cust{display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;margin-top:10px;font-size:13px}.muted{color:#555;font-size:12px}
+.sign{margin-top:40px;display:grid;grid-template-columns:2fr 1fr;gap:30px}.sign div{border-top:1px solid #111;padding-top:4px;font-size:12px;color:#555}</style></head><body>
+<div class="hd">${logoData?`<img src="${logoData}" alt="HD Signs">`:'<b style="color:#d4af37">HD SIGNS</b>'}<div>Quote #${esc(q.number)}<br>${esc(fmtDate(q.date))}<br>${esc(P.shopEmail)}</div></div>
+<h1>Sign quote${c.name?` for ${esc(c.name)}`:''}</h1>
+<div class="cust">${c.phone?`<span>Phone: ${esc(c.phone)}</span>`:''}${c.email?`<span>Email: ${esc(c.email)}</span>`:''}${c.address?`<span>Job address: ${esc(c.address)}</span>`:''}</div>
+<table>${rows.join('')}${extra.map(([a,b])=>`<tr><td>${esc(a)}</td><td class="r">${esc(b)}</td></tr>`).join('')}
+<tr class="tot"><td>Estimated total</td><td class="r">${money(t.total)}</td></tr></table>
+${t.deposit>0?`<p><b>Deposit to start production (${R('depositPct')}%): ${money(t.deposit)}</b> · balance due on completion ${money(t.total-t.deposit)}</p>`:''}
+${q.notes?`<p><b>Notes:</b> ${esc(q.notes)}</p>`:''}${q.art.length?`<p class="muted">Artwork on file: ${esc(q.art.join(', '))}</p>`:''}
+<p class="muted">${esc(termsText())}</p>
+<div class="sign"><div>Customer approval signature</div><div>Date</div></div></body></html>`;
+}
+let downloads = null;
+$('qDl').addEventListener('click', async () => {
+  const html = customerHTML(Q, calcQuote(Q));
+  if (!downloads){ showTextDialog(quoteText(Q, calcQuote(Q))); toast('Downloads aren\'t available here, so the quote text is shown to copy.'); return; }
+  try {
+    await downloads.save({ filename: `${Q.number}${Q.customer.name?'-'+Q.customer.name.replace(/[^\w-]+/g,'_'):''}.html`, data: new Blob([html],{type:'text/html'}) });
+    toast('Quote downloaded. Open it and print or save as PDF for the customer.');
+  } catch(e){ if (e?.code !== 'cancelled' && e?.code !== 'declined') toast('Download didn\'t finish. Use Copy quote text instead.'); }
+});
+
+/* ============ save quote / create job ============ */
+function quoteRecord(){
+  const t = calcQuote(Q);
+  const rec = clone(Q);
+  delete rec.id;
+  rec.items.forEach(it => delete it.k);
+  rec.total = Math.round(t.total*100)/100;
+  rec.deposit = Math.round(t.deposit*100)/100;
+  rec.summary = t.lines.map(({it,c},i)=>`${it.kind==='custom'?'•':`Sign ${i+1}:`} ${describeItem(it,c)} — ${money(c.charged)}`).join('\n');
+  rec.updatedAt = new Date().toISOString();
+  return rec;
+}
+async function saveQuote(quiet){
+  if (!quotesCol){ toast('Saving is off in this view.'); return false; }
+  const rec = quoteRecord();
+  try {
+    if (Q.id) await quotesCol.doc(Q.id).set(rec);
+    else { const ref = quotesCol.doc(); await ref.set(rec); Q.id = ref.id; }
+    if (!quiet) toast(`Quote #${Q.number} saved`);
+    update(); return true;
+  } catch(e){ toast(e?.code==='quota_exceeded' ? 'Storage is full. Delete old quotes to save new ones.' : 'Couldn\'t save. Check your connection and try again.'); return false; }
+}
+$('qSave').addEventListener('click', () => saveQuote(false));
+$('qToJob').addEventListener('click', async () => {
+  if (Q.jobId){ const j = jobs.find(x=>x.id===Q.jobId); if (j){ showView('jobs'); openJob(j); return; } }
+  if (!Q.customer.name){ toast('Add the customer name first.'); $('cName').focus(); return; }
+  Q.status = 'Accepted';
+  if (!(await saveQuote(true))) return;
+  const t = calcQuote(Q);
+  const job = {
+    number: 'J-' + Q.number.replace(/^HD-/,''), quoteId: Q.id, quoteNumber: Q.number,
+    customer: clone(Q.customer), title: Q.items.map((it)=>it.label || (it.kind==='custom'?it.label:mat(it.material).name)).filter(Boolean).slice(0,3).join(', ') || 'Sign job',
+    summary: quoteRecord().summary, total: Math.round(t.total*100)/100, deposit: Math.round(t.deposit*100)/100, paid: 0,
+    stage: STAGES[0], due: '', installDate: '', assignee: '', rush: !!Q.opts.rush, install: !!Q.opts.install, permit: !!Q.opts.permit,
+    notes: [Q.notes, Q.internal].filter(Boolean).join('\n'), art: clone(Q.art),
+    createdAt: new Date().toISOString(), updatedAt: new Date().toISOString(), history: [{ stage: STAGES[0], at: new Date().toISOString() }]
+  };
+  try {
+    const ref = jobsCol.doc(); await ref.set(job);
+    Q.jobId = ref.id; await quotesCol.doc(Q.id).update({ status:'Accepted', jobId: ref.id });
+    update(); toast(`Job ${job.number} created`);
+    showView('jobs'); openJob({ id: ref.id, ...job });
+  } catch(e){ toast('Couldn\'t create the job. Try again.'); }
+});
+
+/* ============ quotes list ============ */
+function renderQuotes(){
+  $('ctQuotes').textContent = quotes.length;
+  const s = $('qSearch').value.trim().toLowerCase(), f = $('qFilter').value;
+  const list = quotes.filter(q => (!f || q.status===f) && (!s || [q.number, q.customer?.name, q.customer?.address, q.customer?.phone].join(' ').toLowerCase().includes(s)));
+  const open = quotes.filter(q=>q.status==='Draft'||q.status==='Sent');
+  $('quotesMeta').textContent = quotes.length ? `${open.length} open · ${money(open.reduce((a,q)=>a+(q.total||0),0))} pending` : '';
+  if (!quotes.length){ $('quotesOut').innerHTML = `<div class="empty"><b>No saved quotes yet</b>Build a quote on the New quote tab and press Save quote. It will show up here for everyone at the shop.</div>`; return; }
+  if (!list.length){ $('quotesOut').innerHTML = `<div class="empty"><b>No quotes match</b>Try a different search or status.</div>`; return; }
+  $('quotesOut').innerHTML = `<div class="tablewrap"><table><thead><tr><th>Quote #</th><th>Date</th><th>Customer</th><th class="r">Total</th><th>Status</th><th></th></tr></thead><tbody>
+    ${list.map(q=>`<tr data-id="${esc(q.id)}"><td><span class="mono">${esc(q.number)}</span></td><td>${esc(fmtDate(q.date))}</td><td>${esc(q.customer?.name||'—')}<div style="color:var(--dim);font-size:12px">${esc(q.customer?.address||'')}</div></td>
+      <td class="r num"><b>${money(q.total)}</b></td>
+      <td><select class="in" data-st style="width:auto;padding:4px 24px 4px 8px;font-size:12.5px">${['Draft','Sent','Accepted','Declined'].map(s=>`<option ${s===q.status?'selected':''}>${s}</option>`).join('')}</select></td>
+      <td><div class="row" style="flex-wrap:nowrap"><button class="btn sm" data-open>Open</button><button class="btn sm" data-dup>Copy</button><button class="btn ghost sm" data-del>Delete</button></div></td></tr>`).join('')}
+  </tbody></table></div>`;
+}
+$('qSearch').addEventListener('input', renderQuotes);
+$('qFilter').addEventListener('change', renderQuotes);
+$('quotesOut').addEventListener('change', async e => {
+  if (!e.target.matches('[data-st]')) return;
+  const id = e.target.closest('tr').dataset.id;
+  try { await quotesCol.doc(id).update({ status: e.target.value }); if (Q.id===id){ Q.status=e.target.value; update(); } } catch(err){ toast('Couldn\'t update the status.'); }
+});
+$('quotesOut').addEventListener('click', async e => {
+  const tr = e.target.closest('tr'); if (!tr) return;
+  const q = quotes.find(x=>x.id===tr.dataset.id); if (!q) return;
+  if (e.target.matches('[data-open]')){ loadQuoteIntoForm(q); showView('quote'); }
+  if (e.target.matches('[data-dup]')){ const c = clone(q); c.id=null; c.number=newQuoteNumber(); c.date=todayISO(); c.status='Draft'; c.jobId=null; loadQuoteIntoForm(c); showView('quote'); toast('Copied into a new draft. Save it to keep it.'); }
+  if (e.target.matches('[data-del]')){
+    if (e.target.dataset.sure){ try { await quotesCol.doc(q.id).delete(); toast('Quote deleted'); } catch(err){ toast('Couldn\'t delete.'); } }
+    else { e.target.dataset.sure='1'; e.target.textContent='Confirm delete'; e.target.classList.add('danger'); setTimeout(()=>{ if (e.target.isConnected){ delete e.target.dataset.sure; e.target.textContent='Delete'; e.target.classList.remove('danger'); } }, 4000); }
+  }
+});
+
+/* ============ jobs ============ */
+const balance = j => Math.max(0, (Number(j.total)||0) - (Number(j.paid)||0));
+const isOverdue = j => j.due && j.stage!=='Paid' && !j.stage.startsWith('Complete') && j.due < todayISO();
+function dueChip(j){
+  if (!j.due) return '';
+  if (isOverdue(j)) return `<span class="pill red">Overdue · ${esc(fmtDate(j.due))}</span>`;
+  const days = Math.round((new Date(j.due+'T12:00') - new Date(todayISO()+'T12:00'))/864e5);
+  return `<span class="pill ${days<=3?'ph':''}">Due ${days===0?'today':days===1?'tomorrow':esc(fmtDate(j.due))}</span>`;
+}
+function renderJobs(){
+  $('ctJobs').textContent = jobs.filter(j=>j.stage!=='Paid').length;
+  const active = jobs.filter(j=>j.stage!=='Paid');
+  const week = new Date(); week.setDate(week.getDate()+7); const weekISO = week.toISOString().slice(0,10);
+  const late = active.filter(isOverdue);
+  const owed = jobs.reduce((s,j)=>s+balance(j),0);
+  $('kpis').innerHTML = `
+    <div class="kpi"><div class="k">Active jobs</div><div class="v">${active.length}</div></div>
+    <div class="kpi ${late.length?'warn':''}"><div class="k">Overdue</div><div class="v">${late.length}</div></div>
+    <div class="kpi"><div class="k">Due in 7 days</div><div class="v">${active.filter(j=>j.due && j.due>=todayISO() && j.due<=weekISO).length}</div></div>
+    <div class="kpi"><div class="k">Balance owed</div><div class="v">${money(owed)}</div></div>`;
+  const s = $('jSearch').value.trim().toLowerCase();
+  let list = jobs.filter(j => (!s || [j.number,j.customer?.name,j.title,j.summary,j.assignee].join(' ').toLowerCase().includes(s)));
+  if ($('jOnlyLate').checked) list = list.filter(isOverdue);
+  const stages = $('jShowPaid').checked ? STAGES : STAGES.filter(x=>x!=='Paid');
+  if (!$('jShowPaid').checked) list = list.filter(j=>j.stage!=='Paid');
+  list.sort((a,b)=> (a.due||'9999').localeCompare(b.due||'9999'));
+  if (!jobs.length){
+    $('jobsOut').innerHTML = `<div class="empty"><b>No jobs yet</b>Accept a quote with <i>Accept &amp; create job</i>, or press <i>+ New job</i> to add one by hand.</div>`; return;
+  }
+  if (jobView==='list'){
+    $('jobsOut').innerHTML = list.length ? `<div class="tablewrap"><table><thead><tr><th>Job #</th><th>Customer</th><th>Signs</th><th>Stage</th><th>Due</th><th>Assigned</th><th class="r">Total</th><th class="r">Balance</th></tr></thead><tbody>
+      ${list.map(j=>`<tr data-id="${esc(j.id)}" style="cursor:pointer"><td><span class="mono">${esc(j.number)}</span></td><td><b>${esc(j.customer?.name||'—')}</b></td><td style="max-width:260px">${esc(j.title)}</td>
+      <td><span class="pill ${j.stage==='Paid'?'green':''}">${esc(j.stage)}</span></td><td>${dueChip(j)||'—'}</td><td>${esc(j.assignee||'—')}</td><td class="r num">${money(j.total)}</td><td class="r num">${balance(j)>0?`<b>${money(balance(j))}</b>`:'<span class="pill green">Paid</span>'}</td></tr>`).join('')}
+    </tbody></table></div>` : `<div class="empty"><b>No jobs match</b>Try a different search or filter.</div>`;
+    return;
+  }
+  $('jobsOut').innerHTML = `<div class="board">${stages.map((st,si)=>{
+    const cards = list.filter(j=>j.stage===st);
+    return `<div class="col" data-stage="${esc(st)}"><div class="col-h"><span>${esc(st)}</span><span class="n">${cards.length}</span></div>
+      ${cards.map(j=>`<div class="jc ${isOverdue(j)?'overdue':''}" data-id="${esc(j.id)}" draggable="true" tabindex="0">
+        <div class="t1"><span>${esc(j.number)}</span>${j.rush?'<span class="pill red">Rush</span>':''}</div>
+        <div class="cust">${esc(j.customer?.name||'No name')}</div>
+        <div class="what">${esc(j.title)}</div>
+        <div class="chips">${dueChip(j)}${j.install?'<span class="pill">Install</span>':''}${j.permit?'<span class="pill">Permit</span>':''}
+          ${j.deposit>0 && (Number(j.paid)||0)<j.deposit && j.stage===STAGES[0] ? '<span class="pill ph">Deposit due</span>' : ''}
+          ${balance(j)>0 && (st.startsWith('Complete')) ? `<span class="pill ph">Owes ${money(balance(j))}</span>`:''}${j.assignee?`<span class="pill">${esc(j.assignee)}</span>`:''}</div>
+        <div class="mv"><button class="btn sm" data-mv="-1" ${si===0?'disabled':''} aria-label="Move back">←</button><span class="num" style="font-size:12px;color:var(--dim);align-self:center">${money(j.total)}</span><button class="btn sm" data-mv="1" ${si===STAGES.length-1?'disabled':''} aria-label="Move forward">→</button></div>
+      </div>`).join('') || '<div class="none">Nothing here</div>'}</div>`;
+  }).join('')}</div>`;
+}
+async function moveJob(j, stage){
+  if (!jobsCol || j.stage===stage) return;
+  const hist = [...(j.history||[]), { stage, at: new Date().toISOString() }].slice(-30);
+  const patch = { stage, history: hist, updatedAt: new Date().toISOString() };
+  if (stage==='Paid') patch.paid = Number(j.total)||0;
+  try { await jobsCol.doc(j.id).update(patch); toast(`${j.number} → ${stage}`); } catch(e){ toast('Couldn\'t move the job.'); }
+}
+$('jobsOut').addEventListener('click', e => {
+  const card = e.target.closest('[data-id]'); if (!card) return;
+  const j = jobs.find(x=>x.id===card.dataset.id); if (!j) return;
+  const mv = e.target.closest('[data-mv]');
+  if (mv){ const i = STAGES.indexOf(j.stage) + Number(mv.dataset.mv); if (STAGES[i]) moveJob(j, STAGES[i]); return; }
+  openJob(j);
+});
+$('jobsOut').addEventListener('keydown', e => { if (e.key==='Enter' && e.target.matches('.jc')){ const j = jobs.find(x=>x.id===e.target.dataset.id); if (j) openJob(j); } });
+$('jobsOut').addEventListener('dragstart', e => { const c = e.target.closest('.jc'); if (c) e.dataTransfer.setData('text/plain', c.dataset.id); });
+$('jobsOut').addEventListener('dragover', e => { const col = e.target.closest('.col'); if (col){ e.preventDefault(); col.classList.add('over'); } });
+$('jobsOut').addEventListener('dragleave', e => { const col = e.target.closest('.col'); if (col && !col.contains(e.relatedTarget)) col.classList.remove('over'); });
+$('jobsOut').addEventListener('drop', e => { const col = e.target.closest('.col'); if (!col) return; e.preventDefault(); col.classList.remove('over'); const j = jobs.find(x=>x.id===e.dataTransfer.getData('text/plain')); if (j) moveJob(j, col.dataset.stage); });
+['jSearch','jShowPaid','jOnlyLate'].forEach(id => $(id).addEventListener('input', renderJobs));
+$('jView').addEventListener('click', e => { const m = e.target.dataset.m; if (!m) return; jobView = m; try{ localStorage.setItem('hd.jobView', m); }catch(err){} [...$('jView').children].forEach(b=>b.classList.toggle('on', b.dataset.m===m)); renderJobs(); });
+$('jNew').addEventListener('click', () => openJob(null));
+
+function openJob(j){
+  const isNew = !j;
+  const d = j ? clone(j) : { number:'J-'+todayISO().replace(/-/g,'')+'-'+Math.floor(100+Math.random()*900), customer:{name:'',phone:'',email:'',address:''}, title:'', summary:'', total:'', deposit:'', paid:0, stage:STAGES[0], due:'', installDate:'', assignee:'', rush:false, install:false, permit:false, notes:'', art:[], history:[] };
+  openDlg(`
+    <div class="dlg-h"><h3>${isNew?'New job':esc(d.number)}</h3><button class="btn sm" data-close>Close</button></div>
+    <div class="dlg-b">
+      <div><span class="lbl">Stage</span><div class="stages" id="jdStages">${STAGES.map(s=>`<button type="button" class="${s===d.stage?'on':''}" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div></div>
+      <div class="grid2">
+        <div class="f"><label for="jdName">Customer</label><input class="in" id="jdName" value="${esc(d.customer.name)}"></div>
+        <div class="f"><label for="jdPhone">Phone</label><input class="in" id="jdPhone" value="${esc(d.customer.phone)}"></div>
+        <div class="f"><label for="jdEmail">Email</label><input class="in" id="jdEmail" value="${esc(d.customer.email)}"></div>
+        <div class="f"><label for="jdAddr">Job address</label><input class="in" id="jdAddr" value="${esc(d.customer.address)}"></div>
+        <div class="f full"><label for="jdTitle">What we're making</label><input class="in" id="jdTitle" value="${esc(d.title)}" placeholder="e.g. 2 storefront banners + door vinyl"></div>
+      </div>
+      <div class="grid4">
+        <div class="f"><label for="jdDue">Due date</label><input class="in" type="date" id="jdDue" value="${esc(d.due)}"></div>
+        <div class="f"><label for="jdInst">Install / pickup date</label><input class="in" type="date" id="jdInst" value="${esc(d.installDate)}"></div>
+        <div class="f"><label for="jdWho">Assigned to</label><input class="in" id="jdWho" value="${esc(d.assignee)}" placeholder="Name"></div>
+        <div class="f" style="align-self:end"><label class="chk"><input type="checkbox" id="jdRush" ${d.rush?'checked':''}> Rush</label></div>
+      </div>
+      <div class="grid4">
+        <div class="f"><label for="jdTotal">Job total</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" id="jdTotal" value="${esc(d.total)}"></div></div>
+        <div class="f"><label for="jdDep">Deposit required</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" id="jdDep" value="${esc(d.deposit)}"></div></div>
+        <div class="f"><label for="jdPaid">Paid so far</label><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" id="jdPaid" value="${esc(d.paid)}"></div></div>
+        <div class="f"><span class="lbl">Balance</span><div id="jdBal" class="num" style="font:400 22px/1.4 var(--display)"></div></div>
+      </div>
+      <div class="row"><label class="chk"><input type="checkbox" id="jdInstall" ${d.install?'checked':''}> Needs install</label><label class="chk"><input type="checkbox" id="jdPermit" ${d.permit?'checked':''}> Needs permit</label></div>
+      ${d.summary?`<div><span class="lbl">From quote ${esc(d.quoteNumber||'')}</span><div class="summary">${esc(d.summary)}</div></div>`:''}
+      ${(d.art||[]).length?`<div class="lbl" style="margin:0">Artwork: ${esc(d.art.join(', '))}</div>`:''}
+      <div class="f"><label for="jdNotes">Notes</label><textarea class="in" id="jdNotes" rows="3" placeholder="Proof sent, colors approved, materials ordered…">${esc(d.notes)}</textarea></div>
+      ${(d.history||[]).length?`<div><span class="lbl">History</span><div class="hist">${d.history.slice().reverse().map(h=>`<span>${esc(new Date(h.at).toLocaleString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}))} · ${esc(h.stage)}</span>`).join('')}</div></div>`:''}
+    </div>
+    <div class="dlg-f">
+      <div class="row">${isNew?'':'<button class="btn danger sm" id="jdDel">Delete job</button>'}${d.quoteId?'<button class="btn sm" id="jdQuote">Open quote</button>':''}</div>
+      <div class="row"><button class="btn sm" data-close>Cancel</button><button class="btn gold" id="jdSave">${isNew?'Create job':'Save changes'}</button></div>
+    </div>`);
+  let stage = d.stage;
+  const bal = () => { $('jdBal').textContent = money(Math.max(0,(parseFloat($('jdTotal').value)||0)-(parseFloat($('jdPaid').value)||0))); };
+  bal(); ['jdTotal','jdPaid'].forEach(id=>$(id).addEventListener('input', bal));
+  $('jdStages').addEventListener('click', e => { const s = e.target.dataset.s; if (!s) return; stage = s; [...$('jdStages').children].forEach(b=>b.classList.toggle('on', b.dataset.s===s)); if (s==='Paid' && !(parseFloat($('jdPaid').value)>0)) { $('jdPaid').value = $('jdTotal').value; bal(); } });
+  $('jdQuote')?.addEventListener('click', () => { const q = quotes.find(x=>x.id===d.quoteId); closeDlg(); if (q){ loadQuoteIntoForm(q); showView('quote'); } else toast('That quote was deleted.'); });
+  $('jdDel')?.addEventListener('click', async e => {
+    if (!e.target.dataset.sure){ e.target.dataset.sure='1'; e.target.textContent='Click again to delete'; return; }
+    try { await jobsCol.doc(j.id).delete(); closeDlg(); toast(`${d.number} deleted`); } catch(err){ toast('Couldn\'t delete.'); }
+  });
+  $('jdSave').addEventListener('click', async () => {
+    if (!jobsCol){ toast('Saving is off in this view.'); return; }
+    const now = new Date().toISOString();
+    const rec = { ...d,
+      customer:{ name:$('jdName').value.trim(), phone:$('jdPhone').value.trim(), email:$('jdEmail').value.trim(), address:$('jdAddr').value.trim() },
+      title:$('jdTitle').value.trim() || 'Sign job', due:$('jdDue').value, installDate:$('jdInst').value, assignee:$('jdWho').value.trim(),
+      rush:$('jdRush').checked, install:$('jdInstall').checked, permit:$('jdPermit').checked,
+      total: parseFloat($('jdTotal').value)||0, deposit: parseFloat($('jdDep').value)||0, paid: parseFloat($('jdPaid').value)||0,
+      notes:$('jdNotes').value, stage, updatedAt: now };
+    if (stage !== d.stage || isNew) rec.history = [...(d.history||[]), { stage, at: now }].slice(-30);
+    delete rec.id;
+    if (!rec.customer.name){ toast('Add the customer name.'); $('jdName').focus(); return; }
+    try {
+      if (isNew){ rec.createdAt = now; await jobsCol.doc().set(rec); } else await jobsCol.doc(j.id).set(rec);
+      closeDlg(); toast(isNew ? `Job ${rec.number} created` : 'Job saved');
+    } catch(err){ toast(err?.code==='quota_exceeded' ? 'Storage is full. Delete old paid jobs first.' : 'Couldn\'t save the job.'); }
+  });
+}
+
+/* ============ dialog + toast + tabs ============ */
+function openDlg(html){ $('dlg').innerHTML = html; $('scrim').hidden = false; $('dlg').querySelector('input,button')?.focus(); }
+function closeDlg(){ $('scrim').hidden = true; $('dlg').innerHTML = ''; }
+$('scrim').addEventListener('click', e => { if (e.target === $('scrim') || e.target.matches('[data-close]')) closeDlg(); });
+document.addEventListener('keydown', e => { if (e.key==='Escape' && !$('scrim').hidden) closeDlg(); });
+let toastT;
+function toast(msg){ const t=$('toast'); t.textContent=msg; t.hidden=false; clearTimeout(toastT); toastT=setTimeout(()=>t.hidden=true, 3200); }
+function showView(v){
+  ['quote','quotes','jobs','prices'].forEach(x => { $('v-'+x).hidden = x!==v; $('tab-'+x).classList.toggle('on', x===v); });
+  if (v==='prices') renderPriceList();
+  try { localStorage.setItem('hd.view', v); } catch(e) {}
+  window.scrollTo({top:0});
+}
+$('tabs').addEventListener('click', e => { const b = e.target.closest('.tab'); if (b) showView(b.dataset.v); });
+
+/* ============ price list editor ============ */
+function renderPriceList(){
+  const D = plDraft;
+  const unconfirmed = [...D.materials.filter(m=>!m.confirmed).map(m=>m.name), ...D.addons.filter(a=>!a.confirmed).map(a=>a.name), ...Object.entries(D.rules).filter(([,r])=>!r.ok).map(([k])=>RULE_META[k][0].toLowerCase())];
+  $('plNotice').hidden = !unconfirmed.length;
+  $('plNotice').innerHTML = `<span><b>${unconfirmed.length} placeholder price${unconfirmed.length===1?'':'s'}</b> (from your original calculator plus new sign types): ${esc(unconfirmed.join(', '))}. Enter your real numbers and tick Confirmed. Quotes that use a placeholder show a warning.</span>`;
+  $('plMats').innerHTML = D.materials.map((m,i)=>`<tr data-i="${i}">
+    <td><input class="in" data-m="name" value="${esc(m.name)}" aria-label="Material name"></td>
+    <td class="w-num"><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" data-m="rate" value="${esc(m.rate)}" aria-label="Sell price"></div></td>
+    <td class="w-num"><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" data-m="cost" value="${esc(m.cost ?? '')}" placeholder="—" aria-label="Your cost"></div></td>
+    <td class="w-chk"><label class="chk"><input type="checkbox" data-m="rigid" ${m.rigid?'checked':''} aria-label="Rigid substrate"></label></td>
+    <td class="w-chk"><label class="chk"><input type="checkbox" data-m="confirmed" ${m.confirmed?'checked':''} aria-label="Confirmed"></label></td>
+    <td><button class="btn ghost sm" data-rm aria-label="Remove material">✕</button></td></tr>`).join('');
+  $('plAdds').innerHTML = D.addons.map((a,i)=>`<tr data-i="${i}">
+    <td><input class="in" data-a="name" value="${esc(a.name)}" aria-label="Add-on name"></td>
+    <td><select class="in" data-a="per" style="min-width:110px" aria-label="Charged per"><option value="each" ${a.per==='each'?'selected':''}>each piece</option><option value="sign" ${a.per==='sign'?'selected':''}>per sign</option><option value="linft" ${a.per==='linft'?'selected':''}>linear foot</option></select></td>
+    <td class="w-num"><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" data-a="rate" value="${esc(a.rate)}" aria-label="Sell price"></div></td>
+    <td class="w-num"><div class="unitin"><span style="padding:0 0 0 9px">$</span><input type="number" step="0.01" data-a="cost" value="${esc(a.cost ?? '')}" placeholder="—" aria-label="Your cost"></div></td>
+    <td class="w-chk"><label class="chk"><input type="checkbox" data-a="confirmed" ${a.confirmed?'checked':''} aria-label="Confirmed"></label></td>
+    <td><button class="btn ghost sm" data-rm aria-label="Remove add-on">✕</button></td></tr>`).join('');
+  $('plRules').innerHTML = Object.entries(RULE_META).map(([k,[lab,u]])=>`<div class="f"><label for="pr_${k}">${esc(lab)} ${D.rules[k].ok?'':'<span class="pill ph">placeholder</span>'}</label>
+    <div class="unitin">${u==='$'?'<span style="padding:0 0 0 9px">$</span>':''}<input type="number" step="0.01" id="pr_${k}" data-r="${k}" value="${esc(D.rules[k].v)}">${u==='%'?'<span>%</span>':''}</div>
+    ${D.rules[k].ok?'':`<label class="chk" style="margin-top:4px;font-size:12px"><input type="checkbox" data-rok="${k}"> Confirm</label>`}</div>`).join('');
+  $('plVol').innerHTML = D.volume.map((t,i)=>`<div class="f"><label>Tier ${i+1}: at least</label><div class="row" style="flex-wrap:nowrap"><div class="unitin"><input type="number" min="0" data-vmin="${i}" value="${esc(t.min)}" aria-label="Minimum signs"><span>signs</span></div><div class="unitin"><input type="number" min="0" data-vpct="${i}" value="${esc(t.pct)}" aria-label="Discount percent"><span>%</span></div></div></div>`).join('');
+  $('plTerms').value = D.terms;
+  $('plState').textContent = plDirty ? 'Unsaved changes' : (priceDoc ? 'Saved for everyone at the shop' : 'Saving is off in this view');
+}
+function plTouch(){ plDirty = true; $('plState').textContent = 'Unsaved changes'; }
+$('plMats').addEventListener('input', e => { const i = e.target.closest('tr').dataset.i, k = e.target.dataset.m; if (!k) return; const m = plDraft.materials[i];
+  m[k] = e.target.type==='checkbox' ? e.target.checked : (k==='name' ? e.target.value : (e.target.value===''? (k==='cost'?null:0) : parseFloat(e.target.value))); plTouch(); });
+$('plAdds').addEventListener('input', e => { const i = e.target.closest('tr').dataset.i, k = e.target.dataset.a; if (!k) return; const a = plDraft.addons[i];
+  a[k] = e.target.type==='checkbox' ? e.target.checked : (k==='name'||k==='per' ? e.target.value : (e.target.value===''? (k==='cost'?null:0) : parseFloat(e.target.value))); plTouch(); });
+$('plMats').addEventListener('click', e => { if (e.target.matches('[data-rm]')){ if (plDraft.materials.length<2) return toast('Keep at least one material.'); plDraft.materials.splice(e.target.closest('tr').dataset.i,1); plTouch(); renderPriceList(); } });
+$('plAdds').addEventListener('click', e => { if (e.target.matches('[data-rm]')){ plDraft.addons.splice(e.target.closest('tr').dataset.i,1); plTouch(); renderPriceList(); } });
+$('plAddMat').addEventListener('click', () => { plDraft.materials.push({id:'m'+uid(),name:'New material',rate:0,cost:null,rigid:false,confirmed:true}); plTouch(); renderPriceList(); });
+$('plAddAdd').addEventListener('click', () => { plDraft.addons.push({id:'a'+uid(),name:'New add-on',per:'each',rate:0,cost:null,confirmed:true,auto:'one'}); plTouch(); renderPriceList(); });
+$('plRules').addEventListener('input', e => {
+  if (e.target.dataset.r){ plDraft.rules[e.target.dataset.r].v = parseFloat(e.target.value)||0; plTouch(); }
+  if (e.target.dataset.rok){ plDraft.rules[e.target.dataset.rok].ok = e.target.checked; plTouch(); }
+});
+$('plVol').addEventListener('input', e => { if (e.target.dataset.vmin) plDraft.volume[e.target.dataset.vmin].min = parseInt(e.target.value)||0; if (e.target.dataset.vpct) plDraft.volume[e.target.dataset.vpct].pct = parseFloat(e.target.value)||0; plTouch(); });
+$('plTerms').addEventListener('input', e => { plDraft.terms = e.target.value; plTouch(); });
+$('plReset').addEventListener('click', () => { plDraft = clone(P); plDirty = false; renderPriceList(); });
+$('plSave').addEventListener('click', async () => {
+  if (!priceDoc){ toast('Saving is off in this view.'); return; }
+  try { await priceDoc.set(clone(plDraft)); plDirty = false; applyPrices(clone(plDraft)); renderPriceList(); toast('Price list saved'); }
+  catch(e){ toast('Couldn\'t save the price list. You may need edit access.'); }
+});
+function applyPrices(p){
+  // fill any fields missing from older saves with defaults
+  P = { ...clone(DEFAULT_PRICES), ...p, rules: { ...clone(DEFAULT_PRICES.rules), ...(p.rules||{}) } };
+  if (!P.materials?.length) P.materials = clone(DEFAULT_PRICES.materials);
+  labelsFromPrices();
+  if (Q){ Q.items.forEach(it => { if (it.kind==='sign' && !P.materials.some(m=>m.id===it.material)) it.material = P.materials[0].id; }); renderItems(); }
+}
+
+/* ============ boot ============ */
+Q = blankQuote();
+labelsFromPrices();
+loadQuoteIntoForm(Q);
+renderQuotes(); renderJobs();
+[...$('jView').children].forEach(b=>b.classList.toggle('on', b.dataset.m===jobView));
+try { const v = localStorage.getItem('hd.view'); if (v && v!=='quote') showView(v); } catch(e) {}
+
+(async () => {
+  const [d, dl] = await Promise.all([ window.claude?.use?.('db') ?? null, window.claude?.use?.('downloads') ?? null ]);
+  downloads = dl;
+  if (!d){ $('dbNotice').hidden = false; return; }
+  db = d;
+  quotesCol = db.collection('quotes'); jobsCol = db.collection('jobs'); priceDoc = db.doc('config/prices');
+  priceDoc.onSnapshot(s => {
+    if (s.exists){ const data = s.data(); if (!plDirty) { applyPrices(data); plDraft = clone(P); if (!$('v-prices').hidden) renderPriceList(); } }
+  }, () => {});
+  quotesCol.orderBy('updatedAt','desc').limit(500).onSnapshot(s => {
+    quotes = s.docs.map(x => ({ id:x.id, ...x.data() }));
+    renderQuotes();
+    if (Q.id){ const live = quotes.find(q=>q.id===Q.id); if (live && live.jobId && !Q.jobId){ Q.jobId = live.jobId; Q.status = live.status; update(); } }
+  }, () => {});
+  jobsCol.limit(1000).onSnapshot(s => { jobs = s.docs.map(x => ({ id:x.id, ...x.data() })); renderJobs(); }, () => {});
+})();
+</script>
